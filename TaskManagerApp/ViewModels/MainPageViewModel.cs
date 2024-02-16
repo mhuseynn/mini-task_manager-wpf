@@ -76,32 +76,31 @@ public class MainPageViewModel : NotificationService
     {
         Process1 = new Process();
         Textbox = "";
-        Processes = new ObservableCollection<Process>(Process.GetProcesses());
+        Processes = new ObservableCollection<Process>();
         startbtn = new RelayCommand(starttask!);
         stopbtn = new RelayCommand(endtask!);
         addbtn = new RelayCommand(addblack!);
         BlackStrings = new ObservableCollection<string>();
-        BlackStrings.Add("");
         ComboText = "";
-
+     
         Thread thread = new Thread(() =>
         {
             while (true)
             {
                 var blacklistedProcesses = Process.GetProcesses();
                 var black = blacklistedProcesses.Where(p => BlackStrings.Contains(p.ProcessName));
-
+                
                 foreach (Process item in black)
                 {
                     item.Kill();
                     Processes.Remove(item);
-
                 }
-
+                
                 Thread.Sleep(1000);
             }
 
         });
+        
         thread.IsBackground = true;
         thread.Start();
 
