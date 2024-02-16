@@ -40,9 +40,9 @@
 
             <StackPanel Width="230" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                 <TextBlock Text="BlackList" Margin="0 10 0 10"  HorizontalAlignment="Center"/>
-                <ComboBox x:Name="combo"  ItemsSource="{Binding BlackStrings}" Margin="0 10 0 10" Height="25" Width="200"/>
+                <ComboBox  x:Name="combo"  ItemsSource="{Binding BlackStrings}" Margin="0 10 0 10" Height="25" Width="200"/>
                 <TextBox Text="{Binding ComboText,Mode=TwoWay}" Margin="0 10 0 10" Height="25" Width="200"/>
-                <Button Content="Add" Command="{Binding addbtn}" Height="30" Width="50" Margin="0 10 0 10"/>
+                <Button Content="Add" Command="{Binding addbtn}" CommandParameter="{Binding ElementName=combo}" Height="30" Width="50" Margin="0 10 0 10"/>
 
             </StackPanel>
         </Grid>

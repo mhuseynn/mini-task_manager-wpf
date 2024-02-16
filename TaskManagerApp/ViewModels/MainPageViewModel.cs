@@ -94,7 +94,7 @@ public class MainPageViewModel : NotificationService
                     Processes.Remove(item);
                 }
 
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
             }
         });
         thread.IsBackground = true;
@@ -103,8 +103,10 @@ public class MainPageViewModel : NotificationService
     }
     public void addblack(object pa)
     {
+        ComboBox comboBox=pa as ComboBox;
         BlackStrings.Clear();
         BlackStrings.Add(ComboText);
+        comboBox!.SelectedIndex = 0;
         ComboText = "";
     }
     public void starttask(object pa)
