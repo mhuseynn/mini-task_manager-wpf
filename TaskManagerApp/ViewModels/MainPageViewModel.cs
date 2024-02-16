@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,27 +76,31 @@ public class MainPageViewModel : NotificationService
     {
         Process1 = new Process();
         Textbox = "";
-        Processes = new ObservableCollection<Process>();
+        Processes = new ObservableCollection<Process>(Process.GetProcesses());
         startbtn = new RelayCommand(starttask!);
         stopbtn = new RelayCommand(endtask!);
         addbtn = new RelayCommand(addblack!);
         BlackStrings = new ObservableCollection<string>();
         BlackStrings.Add("");
-        ComboText = "";    
+        ComboText = "";
+
         Thread thread = new Thread(() =>
         {
             while (true)
             {
-                Process[] blackProcesses = Process.GetProcessesByName(BlackStrings[0]);
-                   
-                foreach (Process item in blackProcesses)
+                var blacklistedProcesses = Process.GetProcesses();
+                var black = blacklistedProcesses.Where(p => BlackStrings.Contains(p.ProcessName));
+
+                foreach (Process item in black)
                 {
                     item.Kill();
                     Processes.Remove(item);
+
                 }
 
                 Thread.Sleep(1000);
             }
+
         });
         thread.IsBackground = true;
         thread.Start();
@@ -103,10 +108,7 @@ public class MainPageViewModel : NotificationService
     }
     public void addblack(object pa)
     {
-        ComboBox comboBox=pa as ComboBox;
-        BlackStrings.Clear();
         BlackStrings.Add(ComboText);
-        comboBox!.SelectedIndex = 0;
         ComboText = "";
     }
     public void starttask(object pa)
