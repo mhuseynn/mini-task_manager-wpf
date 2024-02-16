@@ -9,13 +9,19 @@
       Title="MainPageView">
 
     <Grid Background="White">
+
+
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="0.3*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.4*"/>
+            </Grid.ColumnDefinitions>
 
-            <ListView SelectionMode="Single" x:Name="mylist" ItemsSource="{Binding Processes}">
+            <ListView Grid.Column="0" SelectionMode="Single" x:Name="mylist" ItemsSource="{Binding Processes}">
 
                 <ListView.View>
                     <GridView>
@@ -32,7 +38,13 @@
 
             </ListView>
 
+            <StackPanel Width="230" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock Text="BlackList" Margin="0 10 0 10"  HorizontalAlignment="Center"/>
+                <ComboBox x:Name="combo"  ItemsSource="{Binding BlackStrings}" Margin="0 10 0 10" Height="25" Width="200"/>
+                <TextBox Text="{Binding ComboText,Mode=TwoWay}" Margin="0 10 0 10" Height="25" Width="200"/>
+                <Button Content="Add" Command="{Binding addbtn}" Height="30" Width="50" Margin="0 10 0 10"/>
 
+            </StackPanel>
         </Grid>
 
         <DockPanel Grid.Row="1" Background="White" Height="100" DockPanel.Dock="Bottom">
@@ -47,6 +59,7 @@
 
                     <TextBox Text="{Binding Textbox,Mode=TwoWay}" Width="300" Height="50" Margin="10"/>
                     <Button Command="{Binding startbtn}" Width="100" Height="50" Margin="10" CommandParameter="{Binding ElementName=labell}" Content="Start"/>
+                   
 
 
                 </StackPanel>

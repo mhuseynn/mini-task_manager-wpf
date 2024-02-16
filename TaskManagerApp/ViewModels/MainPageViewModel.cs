@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TaskManagerApp.Commands;
@@ -10,6 +13,23 @@ namespace TaskManagerApp.ViewModels;
 
 public class MainPageViewModel : NotificationService
 {
+    public ICommand addbtn { get; set; }
+
+    private string combotext;
+
+    public string ComboText
+    {
+        get { return combotext; }
+        set { combotext = value; OnPropertyChanged(); }
+    }
+
+    private ObservableCollection<string> blackStrings;
+
+    public ObservableCollection<string> BlackStrings
+    {
+        get { return blackStrings; }
+        set { blackStrings = value; OnPropertyChanged(); }
+    }
 
     public ICommand startbtn { get; set; }
 
@@ -31,15 +51,24 @@ public class MainPageViewModel : NotificationService
         set { processes = value; OnPropertyChanged(); }
     }
 
+    private Process[] blackprocesses;
+
+    public Process[] BlackProcesses
+    {
+        get { return blackprocesses; }
+        set { blackprocesses = value; OnPropertyChanged(); }
+    }
 
 
     private Process process1;
+
 
     public Process Process1
     {
         get { return process1; }
         set { process1 = value; }
     }
+
 
 
     public MainPageViewModel()
@@ -49,10 +78,35 @@ public class MainPageViewModel : NotificationService
         Processes = new ObservableCollection<Process>();
         startbtn = new RelayCommand(starttask!);
         stopbtn = new RelayCommand(endtask!);
+        addbtn = new RelayCommand(addblack!);
+        BlackStrings = new ObservableCollection<string>();
+        BlackStrings.Add("");
+        ComboText = "";    
+        Thread thread = new Thread(() =>
+        {
+            while (true)
+            {
+                Process[] blackProcesses = Process.GetProcessesByName(BlackStrings[0]);
+                   
+                foreach (Process item in blackProcesses)
+                {
+                    item.Kill();
+                    Processes.Remove(item);
+                }
 
-        
+                Thread.Sleep(10000);
+            }
+        });
+        thread.IsBackground = true;
+        thread.Start();
+
     }
-
+    public void addblack(object pa)
+    {
+        BlackStrings.Clear();
+        BlackStrings.Add(ComboText);
+        ComboText = "";
+    }
     public void starttask(object pa)
     {
         if (pa is Label label)
@@ -62,7 +116,7 @@ public class MainPageViewModel : NotificationService
                 try
                 {
                     label.Content = "";
-                    Process1 = Process.Start(Textbox.ToString());                  
+                    Process1 = Process.Start(Textbox.ToString());
                     Processes.Add(Process1);
                     Process1 = new Process();
                     Textbox = "";
