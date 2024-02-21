@@ -76,7 +76,7 @@ public class MainPageViewModel : NotificationService
     {
         Process1 = new Process();
         Textbox = "";
-        Processes = new ObservableCollection<Process>();
+        Processes = new ObservableCollection<Process>(Process.GetProcesses());
         startbtn = new RelayCommand(starttask!);
         stopbtn = new RelayCommand(endtask!);
         addbtn = new RelayCommand(addblack!);
@@ -87,6 +87,7 @@ public class MainPageViewModel : NotificationService
         {
             while (true)
             {
+                Processes = new ObservableCollection<Process>(Process.GetProcesses());
                 var blacklistedProcesses = Process.GetProcesses();
                 var black = blacklistedProcesses.Where(p => BlackStrings.Contains(p.ProcessName));
                 
